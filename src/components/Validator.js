@@ -1,64 +1,27 @@
 import React, {Component} from 'react';
+import Unsplash from 'unsplash-js';
+import cs from 'classnames';
+import {getRandomInt} from '../helpers';
 import '../App.css';
 
 export default class Valid extends Component {
 
+    state = {
+        rulesValidate: 0,
+        validate: [],
+        images: [],
+    };
+
     constructor(props) {
         super(props);
-        this.state = {
-            rulesValidate: 3,
-            images: [
-                //1
-                {
-                    scr: 'https://source.unsplash.com/random/300x400',
-                    active: false,
-                    validate: true,
-                },
-                //2
-                {
-                    scr: 'https://source.unsplash.com/random/300x400',
-                    active: false,
-                },
-                //3
-                {
-                    scr: 'https://source.unsplash.com/random/300x400',
-                    active: false,
-                    validate: true,
-                },
-                //4
-                {
-                    scr: 'https://source.unsplash.com/random/300x400',
-                    active: false,
-                },
-                //5
-                {
-                    scr: 'https://source.unsplash.com/random/300x400',
-                    active: false,
-                },
-                //6
-                {
-                    scr: 'https://source.unsplash.com/random/300x400',
-                    active: false,
-                },
-                //7
-                {
-                    scr: 'https://source.unsplash.com/random/300x400',
-                    active: false,
-                },
-                //8
-                {
-                    scr: 'https://source.unsplash.com/random/300x400',
-                    active: false,
-                },
-                //9
-                {
-                    scr: 'https://source.unsplash.com/random/300x400',
-                    active: false,
-                    validate: true,
-                },
-            ],
-            newArr: [],
-        };
+
+        this.unsplash = new Unsplash({
+            applicationId: "f7b989e5d76edf84aa3b5db5714621b7a7290ca76b1e1adea269cfaf9fd7257f",
+            secret: "707327385261d7646dff1b5fc97c89487016a94729c6d177efa69300bf7fcda1",
+            callbackUrl: "urn:ietf:wg:oauth:2.0:oob"
+        });
+
+
         this.handleClick = (index) => {
             return () => {
                 this.setState((state) => {
@@ -66,52 +29,91 @@ export default class Valid extends Component {
                         images: state.images.map((img, i) => {
                             if (i === index) {
                                 img.active = !img.active;
-                                if (img.active && !img.checker) {
-                                    state.newArr[i] = img;
-                                    img.checker = true;
+                                img.key = i;
+                                if (!state.validate.map((img) => img.key).includes(index)) {
+                                    state.validate.push(img);
                                 }
-                                if (!img.active && img.checker) {
-                                    // console.log(state.newArr.indexOf(img));
-                                    // state.newArr = state.newArr.slice(state.newArr.indexOf(img), 1);
+                                if (!img.active) {
+                                    state.validate = state.validate.filter((img) => img.key !== index);
                                 }
-                                // for(let value of this.state.newArr){
-                                //     console.log(value.validate);
-                                //     // if(!value.validate){
-                                //     //     this.state.newArr.delete(value);
-                                //     //     console.log(this.state.newArr)
-                                //     // }
-                                // }
-
                             }
                             return img;
                         }),
+                    };
+                });
+            };
+        };
+
+        this.handleLoadImage = (index) => {
+            return () => {
+                this.setState(state => {
+                    return {
+                        images: state.images.map((img) => {
+                            if(img.key === index) {
+                                img.load = true;
+                            }
+                            return img;
+                        })
                     }
                 })
             }
         }
     }
 
+    componentDidMount() {
+        this.getListImage()
+    }
+
+    getListImage() {
+        this.unsplash.search.photos("car", getRandomInt(1, 400), 9)
+            .then(res => res.json())
+            .then(json => {
+                this.setState((state) => {
+                    return {
+                        images: json.results.reduce((init, img, key) => {
+                            const validate = img.likes < 10;
+                            if (validate) {
+                                state.rulesValidate += 1;
+                            }
+                            init.push({
+                                scr: img.urls.small,
+                                key,
+                                active: false,
+                                load: false,
+                                validate
+                            });
+                            return init
+                        }, [])
+                    }
+                })
+            });
+    }
+
     get validate() {
-        return this.state.newArr.map((img) => img.validate || false)
+        const validateArr = this.state.validate
+            .map((img) => img.validate ? img.validate : false);
+        return validateArr.compareAll() && validateArr.length === this.state.rulesValidate;
     }
 
     render() {
-        console.log(this.validate);
         return (
             <div className="Valid">
                 <div className="BGColor">
-                    Select all images with <b>BMW</b>
+                    Select ({this.state.rulesValidate}) correct images :)
                 </div>
                 <div className="WrapperValid">
                     {this.state.images.map((img, index) => {
                         return (
-                            <img key={index} onClick={this.handleClick(index)} src={img.scr}
-                                 className={img.active ? 'active' : ''} alt="validImg" id={'falseImg'}/>
-                        )
+                            <img key={index}
+                                 onClick={this.handleClick(index)} src={img.scr}
+                                 className={cs({active: img.active, animate: img.validate, loader: !img.load}, 'img')} alt="validImg"
+                                 onLoad={this.handleLoadImage(index)}
+                            />
+                        );
                     })}
                 </div>
                 <div className="BtnWrapper">
-                    <ul className={"leftMenu"}>
+                    <ul className={'leftMenu'}>
                         <li><a><img
                             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGESURBVDhPrdS/K0ZRHMfxw+BHlIWkZMJmsTGwyEDJhFiESRktZDCIMlhNiIg8RRZ/ASKLJKVsWIhBkR/h/TnPPbqu5173ufnUq+d+z73ndM9z7jkmJMXoxxYu8YQ7nGAeTchFrAzhBp9/2EcdQpOHBbgOz9jEMDrQi3Ecwz3zih4omlFr+jKdRbgHN1CJsDTjAnr2HUv4wCxsBuEGm1RDjJTgEK6frMIUwf1nmmIO4mYU/gF3YOeuQisZNc1guqFp+gdch9n2ipSKLFIDLdgU5jCDNtjvTAPq5r9En4cG7LRV8pR5v+YeGrDLVsniFmdExZlXjKlImCNoDP2fdm+q0FZKkgq8QWO0q6HFK0SbPttod6jvLQrVoA9Zb6fGc2gHxE0D3NtNqMGlHi/QjT18r1hEGvEA9TlFPn6kD+7Lv8IAChBMOTRN92bXqEbG6Ft8hB4UXe9Cx9oyDqDTxd3XgVuLyFRhBf6OQTq9dTZmmkFoSqGDQ/t0DXrDaWi/2tX8HWO+AEkFfjc30QEBAAAAAElFTkSuQmCC"
                             alt=""/></a></li>
@@ -123,12 +125,13 @@ export default class Valid extends Component {
                             alt=""/></a></li>
                         <a>Report a problem</a>
                     </ul>
-                    <ul className={"rightMenu"}>
+                    <ul className={'rightMenu'}>
                         <li>
                             <button
-                                disabled={this.validate}
+
+                                disabled={!this.validate}
                                 onClick={() => {
-                                    alert('ok')
+                                    this.props.onValidate('ok')
                                 }}>Verify
                             </button>
                         </li>
@@ -137,4 +140,4 @@ export default class Valid extends Component {
             </div>
         );
     }
-}
+};
