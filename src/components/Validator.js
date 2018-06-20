@@ -67,21 +67,13 @@ export default class Valid extends Component {
                             if (i === index) {
                                 img.active = !img.active;
                                 if (img.active && !img.checker) {
-                                    state.newArr[i] = img;
                                     img.checker = true;
+                                    console.log(state.newArr.push(img));
                                 }
-                                if (!img.active && img.checker) {
-                                    // console.log(state.newArr.indexOf(img));
-                                    // state.newArr = state.newArr.slice(state.newArr.indexOf(img), 1);
-                                }
-                                // for(let value of this.state.newArr){
-                                //     console.log(value.validate);
-                                //     // if(!value.validate){
-                                //     //     this.state.newArr.delete(value);
-                                //     //     console.log(this.state.newArr)
-                                //     // }
+                                // if (!img.active && img.checker) {
+                                //     // console.log(state.newArr.indexOf(img));
+                                //     console.log(state.newArr = state.newArr.slice(state.newArr.indexOf(img), 1));
                                 // }
-
                             }
                             return img;
                         }),
@@ -92,11 +84,11 @@ export default class Valid extends Component {
     }
 
     get validate() {
-        return this.state.newArr.map((img) => img.validate || false)
+        return this.state.newArr.map((img) => img.validate || false) && this.state.newArr.length !== 3 && this.state.newArr.map((img) => img.checker  )
     }
 
     render() {
-        console.log(this.validate);
+        console.log(this.state.newArr);
         return (
             <div className="Valid">
                 <div className="BGColor">
