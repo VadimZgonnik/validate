@@ -11,13 +11,12 @@ export default class Valid extends Component {
         validate: [],
         images: [],
     };
-
     constructor(props) {
         super(props);
 
         this.unsplash = new Unsplash({
-            applicationId: "92cee3a9b05541079f3632ae3b5b99c479edc8f7a54f49a641b5c5e5ef3360ae",
-            secret: "5d562305cffc96680a94946f3ec5eeba780593a2a4b89664ed3c9e4b8121aef8",
+            applicationId: "57b65fe02d2a4989af9fc0d4f9af747553f5aa72dc9724712345d7d869987884",
+            secret: "9f0944c4d9b3fe450de089434307c8df6cdd9489f56ac3bb4fe36678981e2e78",
             callbackUrl: "urn:ietf:wg:oauth:2.0:oob"
         });
 
@@ -30,12 +29,16 @@ export default class Valid extends Component {
                             if (i === index) {
                                 img.active = !img.active;
                                 img.key = i;
-                                if (!state.validate.map((img) => img.key).includes(index)) {
+                                img.rotate = true;
+                                // if (!state.validate.map((img) => img.key).includes(index)) {
                                     state.validate.push(img);
-                                }
+                                // }
                                 if (!img.active) {
                                     state.validate = state.validate.filter((img) => img.key !== index);
                                 }
+                                setTimeout(() =>
+                                    this.getImages().one(index)
+                                , 0)
                             }
                             return img;
                         }),
@@ -86,14 +89,15 @@ export default class Valid extends Component {
                     if (validate) {
                         state.rulesValidate += 1;
                     }
-                    if(img.key === index) {
+                    if(index || index ===0 ) {
                         init[index] = {
                             scr: img.urls.small,
                             key,
                             active: false,
+                            rotate: false,
                             load: false,
                             validate
-                        }
+                        };
                         return init;
                     }
                     init.push({
@@ -101,10 +105,12 @@ export default class Valid extends Component {
                         key,
                         active: false,
                         load: false,
+                        rotate: false,
                         validate
                     });
                     return init
-                }, (index && state.images) || [])
+                }, (typeof index !== "undefined" ? state.images : [] ))
+
             }
         })
     }
@@ -112,6 +118,7 @@ export default class Valid extends Component {
     get validate() {
         const validateArr = this.state.validate
             .map((img) => img.validate ? img.validate : false);
+        console.log(validateArr, this.state.rulesValidate);
         return validateArr.compareAll() && validateArr.length === this.state.rulesValidate;
     }
 
@@ -126,7 +133,7 @@ export default class Valid extends Component {
                         return (
                             <img key={index}
                                  onClick={this.handleClick(index)} src={img.scr}
-                                 className={cs({active: img.active, animate: img.validate, loader: !img.load}, 'img')} alt="validImg"
+                                 className={cs({active: img.active, animate: img.validate, rotate: img.rotate}, 'img')} alt="validImg"
                                  onLoad={this.handleLoadImage(index)}
                             />
                         );

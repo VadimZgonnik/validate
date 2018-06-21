@@ -23,6 +23,9 @@
   height: 130px;
   margin: 5px 0;
 }
+img.rotate{
+  animation: turn 1300ms;
+}
 #falseImg{
   width: 130px;
   height: 130px;
@@ -94,5 +97,15 @@
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  100% { transform: rotate(180deg); }
+}
+@-webkit-keyframes turn {
+  to {
+    -webkit-transform: rotateY(180deg);
+  }
+}
+@keyframes turn {
+  to {
+    transform: rotateY(180deg);
+  }
 }
