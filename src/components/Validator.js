@@ -16,8 +16,8 @@ export default class Valid extends Component {
         super(props);
 
         this.unsplash = new Unsplash({
-            applicationId: "f7b989e5d76edf84aa3b5db5714621b7a7290ca76b1e1adea269cfaf9fd7257f",
-            secret: "707327385261d7646dff1b5fc97c89487016a94729c6d177efa69300bf7fcda1",
+            applicationId: "92cee3a9b05541079f3632ae3b5b99c479edc8f7a54f49a641b5c5e5ef3360ae",
+            secret: "5d562305cffc96680a94946f3ec5eeba780593a2a4b89664ed3c9e4b8121aef8",
             callbackUrl: "urn:ietf:wg:oauth:2.0:oob"
         });
 
@@ -68,6 +68,7 @@ export default class Valid extends Component {
         const request = (count = 9, cb) => this.unsplash.search.photos("car", getRandomInt(1, 400), count)
             .then(res => res.json())
             .then(json => {
+                !json.results.length && request(count, cb);
                 cb(json)
             });
 
@@ -85,6 +86,7 @@ export default class Valid extends Component {
                     if (validate) {
                         state.rulesValidate += 1;
                     }
+                    console.log(img.key , index);
                     if(img.key === index) {
                         init.push({
                             scr: img.urls.small,
