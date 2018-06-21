@@ -15,8 +15,8 @@ export default class Valid extends Component {
         super(props);
 
         this.unsplash = new Unsplash({
-            applicationId: "57b65fe02d2a4989af9fc0d4f9af747553f5aa72dc9724712345d7d869987884",
-            secret: "9f0944c4d9b3fe450de089434307c8df6cdd9489f56ac3bb4fe36678981e2e78",
+            applicationId: "96ecfabb47da1ff9c8946bb4208055b209772da32b2b05d271d3c23761acaecb",
+            secret: "3f5b1997db9945143691d707235939211a1f46a4f82a223e51f9278e15c6ecf7",
             callbackUrl: "urn:ietf:wg:oauth:2.0:oob"
         });
 
