@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Valid from "./components/Validator";
+import Captcha from "./components/captcha";
 
 class App extends Component {
 
@@ -11,7 +11,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Valid onValidate={this.handleValidate}/>
+        <Captcha onValidate={this.handleValidate}/>
       </div>
     );
   }

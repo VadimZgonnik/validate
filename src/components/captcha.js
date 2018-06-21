@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import Unsplash from 'unsplash-js';
 import cs from 'classnames';
 import '../App.css';
+import ImageItem from './image.item'
 
-export default class Valid extends Component {
+export default class Captcha extends Component {
 
     state = {
-        rulesvalid: 0,
+        rulesValid: 0,
         valid: [],
         images: [],
     };
@@ -15,14 +16,14 @@ export default class Valid extends Component {
         super(props);
 
         this.unsplash = new Unsplash({
-            applicationId: "abdd14abf697b5ce6740d9accd3f34d37ee95431fbc18a536005b6d30c452975",
-            secret: "26aa8db54225fe8e7e85425b08471d50716879a3ecb55c3c1ea57cb7bbc0d3b2",
+            applicationId: "e622d1f39ca4b655729e04fd47f42a7263208c1ab1b198317405e0394a596c56",
+            secret: "26128d4c04ebe228c9a40de6980a4f2c39ba977f3acc80df484a27cb8d187d3e",
             callbackUrl: "urn:ietf:wg:oauth:2.0:oob"
         });
 
-
         this.handlerClick = (index) => {
             return () => {
+                console.log(this.state, '<<<<<');
                 this.setState((state) => {
                     return {
                         images: state.images.map((img, i) => {
@@ -45,9 +46,9 @@ export default class Valid extends Component {
             };
         };
 
-        this.handleloaderImage = (index) => {
+        this.handleLoaderImage = (index) => {
             return () => {
-                this.setState(state => {
+                this.setState((state) => {
                     return {
                         images: state.images.map((img) => {
                             if (img.key === index) {
@@ -61,17 +62,16 @@ export default class Valid extends Component {
         }
     }
 
-
     componentDidMount() {
         this.getGallery().list()
     }
 
-    Randomaiz(min, max) {
+    random(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
     }
 
     getGallery() {
-        const request = (count = 9, cb) => this.unsplash.search.photos("car", this.Randomaiz(1, 400), count)
+        const request = (count = 9, cb) => this.unsplash.search.photos("car", this.random(1, 400), count)
             .then(res => res.json())
             .then(json => {
                 !json.results.length && request(count, cb);
@@ -88,9 +88,9 @@ export default class Valid extends Component {
         this.setState((state) => {
             return {
                 images: json.results.reduce((init, img, key) => {
-                    const valid = this.Randomaiz(1, 100) < 40;
+                    const valid = this.random(1, 100) < 40;
                     if (valid) {
-                        state.rulesvalid += 1;
+                        state.rulesValid += 1;
                     }
                     if (index || index === 0) {
                         init[index] = {
@@ -117,7 +117,7 @@ export default class Valid extends Component {
             }
         })
     }
-    compaere( arr) {
+    compare( arr) {
         let all = true;
         arr.map(e => {if(!e) {all = false; return;}});
         return all;
@@ -125,24 +125,23 @@ export default class Valid extends Component {
     get valid() {
         const newValidArr = this.state.valid
             .map((img) => img.valid ? img.valid : false);
-        console.log(newValidArr, this.state.rulesvalid);
-        return  this.compaere(newValidArr)&& newValidArr.length === this.state.rulesvalid;
+        console.log(newValidArr, this.state.rulesValid);
+        return  this.compare(newValidArr)&& newValidArr.length === this.state.rulesValid;
     }
 
     render() {
         return (
             <div className={"valid"}>
                 <div className={"text-valid-wrapper"}>
-                    Select ({this.state.rulesvalid}) correct images :)
+                    Select ({this.state.rulesValid}) correct images :)
                 </div>
                 <div className={"wrapper-valid"}>
                     {this.state.images.map((img, index) => {
                         return (
-                            <img key={index}
-                                 onClick={this.handlerClick(index)} src={img.scr}
-                                 className={cs({active: img.active, animate: img.valid, rotate: img.rotate}, 'img')}
-                                 alt="validImg"
-                                 onLoad={this.handleloaderImage(index)}
+                            <ImageItem key={index}
+                                       img={img}
+                                       handleLoaderImage={this.handleLoaderImage}
+                                       handlerClick={this.handlerClick}
                             />
                         );
                     })}
