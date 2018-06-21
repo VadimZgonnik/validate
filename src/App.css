@@ -1,18 +1,18 @@
-.Valid{
+.valid{
   max-width: 400px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
   margin: 0 auto;
 }
-.BGColor{
+.text-valid-wrapper{
   display: flex;
   justify-content: center;
   padding: 60px 0;
   background-color: #76dd1e;
   color: #fff;
 }
-.WrapperValid{
+.wrapper-valid{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -27,36 +27,39 @@ img.rotate{
   animation: turn 1300ms;
 }
 
-.BtnWrap{
+.btn-wrap{
   display: flex;
   justify-content: space-between;
 }
-.leftMnu{
+.left-mnu{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   max-width: 150px;
 }
-.leftMnu li {
+.left-mnu li {
   list-style-type: none;
   margin: 5px 10px;
 }
-.leftMnu a{
+.left-mnu a{
   text-transform: none;
   text-decoration: none;
   color: #000;
 }
-.rightMnu{
+.left-mnu li a img{
+  max-width: 24px ;
+}
+.right-mnu{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   max-width: 150px;
 }
-.rightMnu li{
+.right-mnu li{
   list-style-type: none;
   margin: 20px 35px;
 }
-.rightMnu li a{
+.right-mnu li a{
   text-transform: none;
   text-decoration: none;
   color: #fff;

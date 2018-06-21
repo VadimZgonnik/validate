@@ -15,8 +15,8 @@ export default class Valid extends Component {
         super(props);
 
         this.unsplash = new Unsplash({
-            applicationId: "72cec61b163f54ca8ccbbf254795e472f2bf5c38194b19fb095b46b3fa84254e",
-            secret: "6634e48c3866a8e50e674bce20e860c22cac6bdb9eebacd0baa7d02b00d03e5e",
+            applicationId: "abdd14abf697b5ce6740d9accd3f34d37ee95431fbc18a536005b6d30c452975",
+            secret: "26aa8db54225fe8e7e85425b08471d50716879a3ecb55c3c1ea57cb7bbc0d3b2",
             callbackUrl: "urn:ietf:wg:oauth:2.0:oob"
         });
 
@@ -131,11 +131,11 @@ export default class Valid extends Component {
 
     render() {
         return (
-            <div className="Valid">
-                <div className="BGColor">
+            <div className={"valid"}>
+                <div className={"text-valid-wrapper"}>
                     Select ({this.state.rulesvalid}) correct images :)
                 </div>
-                <div className="WrapperValid">
+                <div className={"wrapper-valid"}>
                     {this.state.images.map((img, index) => {
                         return (
                             <img key={index}
@@ -147,20 +147,14 @@ export default class Valid extends Component {
                         );
                     })}
                 </div>
-                <div className="BtnWrap">
-                    <ul className={'leftMnu'}>
-                        <li><a><img
-                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGESURBVDhPrdS/K0ZRHMfxw+BHlIWkZMJmsTGwyEDJhFiESRktZDCIMlhNiIg8RRZ/ASKLJKVsWIhBkR/h/TnPPbqu5173ufnUq+d+z73ndM9z7jkmJMXoxxYu8YQ7nGAeTchFrAzhBp9/2EcdQpOHBbgOz9jEMDrQi3Ecwz3zih4omlFr+jKdRbgHN1CJsDTjAnr2HUv4wCxsBuEGm1RDjJTgEK6frMIUwf1nmmIO4mYU/gF3YOeuQisZNc1guqFp+gdch9n2ipSKLFIDLdgU5jCDNtjvTAPq5r9En4cG7LRV8pR5v+YeGrDLVsniFmdExZlXjKlImCNoDP2fdm+q0FZKkgq8QWO0q6HFK0SbPttod6jvLQrVoA9Zb6fGc2gHxE0D3NtNqMGlHi/QjT18r1hEGvEA9TlFPn6kD+7Lv8IAChBMOTRN92bXqEbG6Ft8hB4UXe9Cx9oyDqDTxd3XgVuLyFRhBf6OQTq9dTZmmkFoSqGDQ/t0DXrDaWi/2tX8HWO+AEkFfjc30QEBAAAAAElFTkSuQmCC"
-                            alt=""/></a></li>
-                        <li><a><img
-                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADpSURBVEhL7ZJLDgFBFEXbWFgFY2zAQHwSaxILYQliC4RFYMwIISLmnNupSjqdlOpniJOcpKtyb73uSic/QR8nuMOHc+v2evgxdVzhM+ISa2iijVfUASccYQvLTj1r74zKXFCdQuhtbqjiDCsYoopz9EMKfcka/eElbURQxg9ZaOMdXVTwiO/ePI++xF9XRxshpqiQ7tfKGNXV3xVEv6JCjXRlo4nqbtJVgDsqZLkejzrq6owgCshPifb/AwoPyBrD1DGFHaaOKewwdUxhh6ljCjtMnQMWDjvy+T0GGWJ+SIxsVocP8GtIkhffF4WSerMOagAAAABJRU5ErkJggg=="
-                            alt=""/></a></li>
-                        <li><a><img
-                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHTSURBVEhLxZXPL1xRFMeHKk2oqh/dVEJCIn50041E2CDR9p+wYSMWFn5UrVqJ2AlJm3RJsCZEBBuWNMJG6KKCprUTthZ8vve8aZjemfdeIvFJPsk5NzPvzNx77nmJmORgloUPQwX24xb+xcvA37iE3ViEsSnGSTzDcWzCfEyih77D7/gHBzAXI9GAP3EMC7QQwmucQ/3LMi1k4g2e4geXxaMPD/GlyzyU4BGme3gpzuMU6rB9DOMGZrssBe35qIVehvAmsEMLHtRhq9jpsjtUog70ucv8NOIVagtfaSEN9fgLn7osQK2obglDnfLEwoysYauFxiaqFR+KXpyw0DjHu33u4wK1/ycuy0wLrlhoHaHbGcYLjFqgGncttJPX4YURp0AN7lhoqIPSXpCAOAV0wAsWGsv43sK0xCkwgl8sNLpQgysTcQps41sLDU1PjeByl/mJWqAdf+B/741BnLXQyzGqwDX+a8EU8nAf21yWgm6pRq6mog81QdJCLXiYxq8W+tE8P8CPGOfV+AxnUIPu3gzyofNYR324TgshaM/38BuGPjyJ5rlGrvZdxXqwGauwFtXnn1CXSTfWu+dR0BjRlzW4dFf0S9WCi/gZ77XiI5BI3AIFGFZRXkSxuAAAAABJRU5ErkJggg=="
-                            alt=""/></a></li>
+                <div className={"btn-wrap"}>
+                    <ul className={'left-mnu'}>
+                        <li><a><img src="./images/restartFilled.svg" alt=""/></a></li>
+                        <li><a><img src="./images/info.svg" alt=""/></a></li>
+                        <li><a><img src="./images/headphones-silhouette.svg" alt=""/></a></li>
                         <a>Report a problem</a>
                     </ul>
-                    <ul className={'rightMnu'}>
+                    <ul className={'right-mnu'}>
                         <li>
                             <button
 

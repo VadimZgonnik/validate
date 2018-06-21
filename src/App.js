@@ -1,4 +1,3 @@
-import './helpers'
 import React, { Component } from 'react';
 import './App.css';
 import Valid from "./components/Validator";
