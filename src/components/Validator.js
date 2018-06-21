@@ -61,32 +61,43 @@ export default class Valid extends Component {
     }
 
     componentDidMount() {
-        this.getListImage()
+        this.getImages().list()
     }
 
-    getListImage() {
-        this.unsplash.search.photos("car", getRandomInt(1, 400), 9)
+    getImages() {
+        const request = (count = 9, cb) => this.unsplash.search.photos("car", getRandomInt(1, 400), count)
             .then(res => res.json())
             .then(json => {
-                this.setState((state) => {
-                    return {
-                        images: json.results.reduce((init, img, key) => {
-                            const validate = img.likes < 10;
-                            if (validate) {
-                                state.rulesValidate += 1;
-                            }
-                            init.push({
-                                scr: img.urls.small,
-                                key,
-                                active: false,
-                                load: false,
-                                validate
-                            });
-                            return init
-                        }, [])
-                    }
-                })
+                cb(json)
             });
+
+        return {
+            list: () => request(9, (json) => this.setImages(json)),
+            one: (index) => request(1, (json) => this.setImages(json, index)),
+        }
+    }
+
+    setImages(json, index) {
+        this.setState((state) => {
+            return {
+                images: json.results.reduce((init, img, key) => {
+                    const validate = img.likes < 10;
+                    if (validate) {
+                        state.rulesValidate += 1;
+                    }
+                    if(img.key === index) {
+                        init.push({
+                            scr: img.urls.small,
+                            key,
+                            active: false,
+                            load: false,
+                            validate
+                        });
+                    }
+                    return init
+                }, (index && state.images) || [])
+            }
+        })
     }
 
     get validate() {
