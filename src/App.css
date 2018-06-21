@@ -9,7 +9,7 @@
   display: flex;
   justify-content: center;
   padding: 60px 0;
-  background-color: #3306F9;
+  background-color: #76dd1e;
   color: #fff;
 }
 .WrapperValid{
@@ -26,47 +26,43 @@
 img.rotate{
   animation: turn 1300ms;
 }
-#falseImg{
-  width: 130px;
-  height: 130px;
-  margin: 5px 0;
-}
-.BtnWrapper{
+
+.BtnWrap{
   display: flex;
   justify-content: space-between;
 }
-.leftMenu{
+.leftMnu{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   max-width: 150px;
 }
-.leftMenu li {
+.leftMnu li {
   list-style-type: none;
   margin: 5px 10px;
 }
-.leftMenu a{
+.leftMnu a{
   text-transform: none;
   text-decoration: none;
   color: #000;
 }
-.rightMenu{
+.rightMnu{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   max-width: 150px;
 }
-.rightMenu li{
+.rightMnu li{
   list-style-type: none;
   margin: 20px 35px;
 }
-.rightMenu li a{
+.rightMnu li a{
   text-transform: none;
   text-decoration: none;
   color: #fff;
-  background-color: #3306F9;
+  background-color: #76dd1e;
   padding: 7px 30px;
-  border: 1px solid #3306F9;
+  border: 1px solid #76dd1e;
   border-radius: 5px;
 }
 .active{
@@ -74,16 +70,16 @@ img.rotate{
 }
 .animate {
   box-shadow:
-          1px 1px #53a7ea,
-          2px 2px #53a7ea,
-          3px 3px #53a7ea;
+          1px 1px #45ea5d,
+          2px 2px #45ea5d,
+          3px 3px #45ea5d;
   -webkit-transform: translateX(-3px);
   transform: translateX(-3px);
 }
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 16px solid #3498db;
+  border-top: 16px solid #76dd1e;
   width: 100px;
   height: 100px;
   -webkit-animation: spin 2s linear infinite; /* Safari */

@@ -1,44 +1,42 @@
 import React, {Component} from 'react';
 import Unsplash from 'unsplash-js';
 import cs from 'classnames';
-import {getRandomInt} from '../helpers';
 import '../App.css';
 
 export default class Valid extends Component {
 
     state = {
-        rulesValidate: 0,
-        validate: [],
+        rulesvalid: 0,
+        valid: [],
         images: [],
     };
+
     constructor(props) {
         super(props);
 
         this.unsplash = new Unsplash({
-            applicationId: "57b65fe02d2a4989af9fc0d4f9af747553f5aa72dc9724712345d7d869987884",
-            secret: "9f0944c4d9b3fe450de089434307c8df6cdd9489f56ac3bb4fe36678981e2e78",
+            applicationId: "72cec61b163f54ca8ccbbf254795e472f2bf5c38194b19fb095b46b3fa84254e",
+            secret: "6634e48c3866a8e50e674bce20e860c22cac6bdb9eebacd0baa7d02b00d03e5e",
             callbackUrl: "urn:ietf:wg:oauth:2.0:oob"
         });
 
 
-        this.handleClick = (index) => {
+        this.handlerClick = (index) => {
             return () => {
                 this.setState((state) => {
                     return {
                         images: state.images.map((img, i) => {
                             if (i === index) {
                                 img.active = !img.active;
-                                img.key = i;
+                                img.index = i;
                                 img.rotate = true;
-                                // if (!state.validate.map((img) => img.key).includes(index)) {
-                                    state.validate.push(img);
-                                // }
+                                state.valid.push(img);
                                 if (!img.active) {
-                                    state.validate = state.validate.filter((img) => img.key !== index);
+                                    state.valid = state.valid.filter((img) => img.key !== index);
                                 }
                                 setTimeout(() =>
-                                    this.getImages().one(index)
-                                , 0)
+                                        this.getGallery().one(index)
+                                    , 0)
                             }
                             return img;
                         }),
@@ -47,13 +45,13 @@ export default class Valid extends Component {
             };
         };
 
-        this.handleLoadImage = (index) => {
+        this.handleloaderImage = (index) => {
             return () => {
                 this.setState(state => {
                     return {
                         images: state.images.map((img) => {
-                            if(img.key === index) {
-                                img.load = true;
+                            if (img.key === index) {
+                                img.loader = true;
                             }
                             return img;
                         })
@@ -63,12 +61,17 @@ export default class Valid extends Component {
         }
     }
 
+
     componentDidMount() {
-        this.getImages().list()
+        this.getGallery().list()
     }
 
-    getImages() {
-        const request = (count = 9, cb) => this.unsplash.search.photos("car", getRandomInt(1, 400), count)
+    Randomaiz(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    getGallery() {
+        const request = (count = 9, cb) => this.unsplash.search.photos("car", this.Randomaiz(1, 400), count)
             .then(res => res.json())
             .then(json => {
                 !json.results.length && request(count, cb);
@@ -76,71 +79,76 @@ export default class Valid extends Component {
             });
 
         return {
-            list: () => request(9, (json) => this.setImages(json)),
-            one: (index) => request(1, (json) => this.setImages(json, index)),
+            list: () => request(9, (json) => this.setGallery(json)),
+            one: (index) => request(1, (json) => this.setGallery(json, index)),
         }
     }
 
-    setImages(json, index) {
+    setGallery(json, index) {
         this.setState((state) => {
             return {
                 images: json.results.reduce((init, img, key) => {
-                    const validate = img.likes < 10;
-                    if (validate) {
-                        state.rulesValidate += 1;
+                    const valid = this.Randomaiz(1, 100) < 40;
+                    if (valid) {
+                        state.rulesvalid += 1;
                     }
-                    if(index || index ===0 ) {
+                    if (index || index === 0) {
                         init[index] = {
                             scr: img.urls.small,
-                            key,
+                            index,
                             active: false,
                             rotate: false,
-                            load: false,
-                            validate
+                            loader: false,
+                            valid
                         };
                         return init;
                     }
                     init.push({
                         scr: img.urls.small,
-                        key,
+                        index,
                         active: false,
-                        load: false,
+                        loader: false,
                         rotate: false,
-                        validate
+                        valid
                     });
                     return init
-                }, (typeof index !== "undefined" ? state.images : [] ))
+                }, (typeof index !== "undefined" ? state.images : []))
 
             }
         })
     }
-
-    get validate() {
-        const validateArr = this.state.validate
-            .map((img) => img.validate ? img.validate : false);
-        console.log(validateArr, this.state.rulesValidate);
-        return validateArr.compareAll() && validateArr.length === this.state.rulesValidate;
+    compaere( arr) {
+        let all = true;
+        arr.map(e => {if(!e) {all = false; return;}});
+        return all;
+    }
+    get valid() {
+        const newValidArr = this.state.valid
+            .map((img) => img.valid ? img.valid : false);
+        console.log(newValidArr, this.state.rulesvalid);
+        return  this.compaere(newValidArr)&& newValidArr.length === this.state.rulesvalid;
     }
 
     render() {
         return (
             <div className="Valid">
                 <div className="BGColor">
-                    Select ({this.state.rulesValidate}) correct images :)
+                    Select ({this.state.rulesvalid}) correct images :)
                 </div>
                 <div className="WrapperValid">
                     {this.state.images.map((img, index) => {
                         return (
                             <img key={index}
-                                 onClick={this.handleClick(index)} src={img.scr}
-                                 className={cs({active: img.active, animate: img.validate, rotate: img.rotate}, 'img')} alt="validImg"
-                                 onLoad={this.handleLoadImage(index)}
+                                 onClick={this.handlerClick(index)} src={img.scr}
+                                 className={cs({active: img.active, animate: img.valid, rotate: img.rotate}, 'img')}
+                                 alt="validImg"
+                                 onLoad={this.handleloaderImage(index)}
                             />
                         );
                     })}
                 </div>
-                <div className="BtnWrapper">
-                    <ul className={'leftMenu'}>
+                <div className="BtnWrap">
+                    <ul className={'leftMnu'}>
                         <li><a><img
                             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGESURBVDhPrdS/K0ZRHMfxw+BHlIWkZMJmsTGwyEDJhFiESRktZDCIMlhNiIg8RRZ/ASKLJKVsWIhBkR/h/TnPPbqu5173ufnUq+d+z73ndM9z7jkmJMXoxxYu8YQ7nGAeTchFrAzhBp9/2EcdQpOHBbgOz9jEMDrQi3Ecwz3zih4omlFr+jKdRbgHN1CJsDTjAnr2HUv4wCxsBuEGm1RDjJTgEK6frMIUwf1nmmIO4mYU/gF3YOeuQisZNc1guqFp+gdch9n2ipSKLFIDLdgU5jCDNtjvTAPq5r9En4cG7LRV8pR5v+YeGrDLVsniFmdExZlXjKlImCNoDP2fdm+q0FZKkgq8QWO0q6HFK0SbPttod6jvLQrVoA9Zb6fGc2gHxE0D3NtNqMGlHi/QjT18r1hEGvEA9TlFPn6kD+7Lv8IAChBMOTRN92bXqEbG6Ft8hB4UXe9Cx9oyDqDTxd3XgVuLyFRhBf6OQTq9dTZmmkFoSqGDQ/t0DXrDaWi/2tX8HWO+AEkFfjc30QEBAAAAAElFTkSuQmCC"
                             alt=""/></a></li>
@@ -152,11 +160,11 @@ export default class Valid extends Component {
                             alt=""/></a></li>
                         <a>Report a problem</a>
                     </ul>
-                    <ul className={'rightMenu'}>
+                    <ul className={'rightMnu'}>
                         <li>
                             <button
 
-                                disabled={!this.validate}
+                                disabled={!this.valid}
                                 onClick={() => {
                                     this.props.onValidate('ok')
                                 }}>Verify
