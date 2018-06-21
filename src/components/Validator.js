@@ -86,16 +86,23 @@ export default class Valid extends Component {
                     if (validate) {
                         state.rulesValidate += 1;
                     }
-                    console.log(img.key , index);
                     if(img.key === index) {
-                        init.push({
+                        init[index] = {
                             scr: img.urls.small,
                             key,
                             active: false,
                             load: false,
                             validate
-                        });
+                        }
+                        return init;
                     }
+                    init.push({
+                        scr: img.urls.small,
+                        key,
+                        active: false,
+                        load: false,
+                        validate
+                    });
                     return init
                 }, (index && state.images) || [])
             }
